@@ -71,17 +71,35 @@ function updateContentById(id:string, content:string): Todo
 
 }
 
+function deleteById(id:string){
+  const todos = read()
+
+  const todosWithoutOne = todos.filter((todo)=>{
+    if(id === todo.id){
+      return false
+    }
+    return true
+  })
+
+  console.log('todosWithoutOne', todosWithoutOne)
+  fs.writeFileSync(DB_FILE_PATH, JSON.stringify({
+    todos:todosWithoutOne,
+  },null,2));
+
+}
+
 function CLEAR_DB(){
   fs.writeFileSync(DB_FILE_PATH, "")
 }
 CLEAR_DB()
-create("Primeira TODO")
-create("Segunda TODO")
-const terceiraTodo= create("Terceira TODO")
+ create("Primeira TODO")
+ const secondTodo = create("Segunda TODO")
+deleteById(secondTodo.id);
+const thirdTodo= create("Terceira TODO")
 // update(terceiraTodo.id, {
 //   content: "Segunda TODO Com novo content!",
 //   done:true,
 // })
-updateContentById(terceiraTodo.id, "Atualizada!")
+updateContentById(thirdTodo.id, "Atualizada!")
 
 console.log(read())
