@@ -11,7 +11,6 @@ interface HomeTodo {
 }
 
 function HomePage() {
-  // const [initialLoadingComplete, setInitialLoadingComplete] =React.useState(false);
   const initialLoadingComplete = React.useRef(false);
   const [totalPages, setTotalPages] = React.useState(0);
   const [page, setPage] = React.useState(1);
@@ -27,11 +26,7 @@ function HomePage() {
   const hasMorePages = totalPages > page;
   const hasNoTodos = todos.length === 0 && !isLoading;
 
-  // setTodos(filteredTodos);
-
-  // Load infos onload
   React.useEffect(() => {
-    // setInitialLoadingComplete(true);
     if (!initialLoadingComplete.current) {
       todoController
         .get({ page })
