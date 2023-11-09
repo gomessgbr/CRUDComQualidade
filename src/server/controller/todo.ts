@@ -37,6 +37,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 }
 
 const TodoCreateBodySchema = schema.object({
+  // Fluent Validations
   content: schema.string(),
 });
 export async function create(req: NextApiRequest, res: NextApiResponse) {
