@@ -11,23 +11,23 @@ interface HomeTodo {
 }
 
 function HomePage() {
-  const initialLoadingComplete = React.useRef(false);
+  const initialLoadComplete = React.useRef(false);
+  const [newTodoContent, setNewTodoContent] = React.useState("");
   const [totalPages, setTotalPages] = React.useState(0);
   const [page, setPage] = React.useState(1);
   const [search, setSearch] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(true);
   const [todos, setTodos] = React.useState<HomeTodo[]>([]);
-
   const homeTodos = todoController.filterTodosByContent<HomeTodo>(
     search,
     todos
   );
 
   const hasMorePages = totalPages > page;
-  const hasNoTodos = todos.length === 0 && !isLoading;
+  const hasNoTodos = homeTodos.length === 0 && !isLoading;
 
   React.useEffect(() => {
-    if (!initialLoadingComplete.current) {
+    if (!initialLoadComplete.current) {
       todoController
         .get({ page })
         .then(({ todos, pages }) => {
@@ -36,7 +36,7 @@ function HomePage() {
         })
         .finally(() => {
           setIsLoading(false);
-          initialLoadingComplete.current = true;
+          initialLoadComplete.current = true;
         });
     }
   }, []);
@@ -52,8 +52,36 @@ function HomePage() {
         <div className="typewriter">
           <h1>O que fazer hoje?</h1>
         </div>
-        <form>
-          <input type="text" placeholder="Correr, Estudar..." />
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            todoController.create({
+              content: newTodoContent,
+              // .then
+              onSuccess(todo: HomeTodo) {
+                setTodos((oldTodos) => {
+                  return [todo, ...oldTodos];
+                });
+                setNewTodoContent("");
+              },
+              // .catch
+              onError(customMessage) {
+                alert(
+                  customMessage ||
+                    "Você precisa ter um conteúdo para criar uma TODO!"
+                );
+              },
+            });
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Correr, Estudar..."
+            value={newTodoContent}
+            onChange={function newTodoHandler(event) {
+              setNewTodoContent(event.target.value);
+            }}
+          />
           <button type="submit" aria-label="Adicionar novo item">
             +
           </button>
@@ -65,10 +93,10 @@ function HomePage() {
           <input
             type="text"
             placeholder="Filtrar lista atual, ex: Dentista"
-            onChange={(event) => {
+            value={search}
+            onChange={function handleSearch(event) {
               setSearch(event.target.value);
             }}
-            value={search}
           />
         </form>
 
@@ -125,6 +153,7 @@ function HomePage() {
                       setIsLoading(true);
                       const nextPage = page + 1;
                       setPage(nextPage);
+
                       todoController
                         .get({ page: nextPage })
                         .then(({ todos, pages }) => {
