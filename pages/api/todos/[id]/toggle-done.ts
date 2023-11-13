@@ -5,7 +5,7 @@ export default function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  if (request.method !== "PUT") {
+  if (request.method === "PUT") {
     todoController.toggleDone(request, response);
     return;
   }
