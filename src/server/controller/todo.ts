@@ -60,7 +60,35 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
   });
 }
 
+async function toggleDone(req: NextApiRequest, res: NextApiResponse) {
+  const todoId = req.query.id;
+  if (!todoId || typeof todoId !== "string") {
+    res.status(400).json({
+      error: {
+        message: "You need to provide a string id to toggle the done status",
+      },
+    });
+    return;
+  }
+
+  try {
+    const updatedTodo = await todoRepository.toggleDone(todoId);
+    res.status(200).json({
+      todo: updatedTodo,
+    });
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(404).json({
+        error: {
+          message: "Todo not found",
+        },
+      });
+    }
+  }
+}
+
 export const todoController = {
   get,
   create,
+  toggleDone,
 };
