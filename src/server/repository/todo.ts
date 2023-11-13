@@ -36,8 +36,6 @@ async function createByContent(content: string): Promise<Todo> {
 }
 
 async function toggleDone(id: string): Promise<Todo> {
-  const currentTodoStatus = false;
-
   const ALL_TODOS = read();
 
   const todo = ALL_TODOS.find((todo) => todo.id === id);
@@ -46,7 +44,7 @@ async function toggleDone(id: string): Promise<Todo> {
   }
 
   const updatedTodo = update(todo.id, {
-    done: !currentTodoStatus,
+    done: !todo.done,
   });
 
   return updatedTodo;
