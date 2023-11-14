@@ -124,6 +124,9 @@ function HomePage() {
                       onChange={() => {
                         todoController.toggleDone({
                           id: todo.id,
+                          onError() {
+                            alert("Falha ao atualizar a todo");
+                          },
                           updateTodoOnScreen() {
                             setTodos((currentTodos) => {
                               return currentTodos.map((currentTodo) => {

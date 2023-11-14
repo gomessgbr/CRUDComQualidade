@@ -52,16 +52,23 @@ function create({ content, onSuccess, onError }: TodoControllerCreateParams) {
 interface TodoControllerToggleDoneParams {
   id: string;
   updateTodoOnScreen: () => void;
+  onError: () => void;
 }
 function toggleDone({
   id,
   updateTodoOnScreen,
+  onError,
 }: TodoControllerToggleDoneParams) {
   //Optmistic update
 
-  todoRepository.toggleDone(id).then(() => {
-    updateTodoOnScreen();
-  });
+  todoRepository
+    .toggleDone(id)
+    .then(() => {
+      updateTodoOnScreen();
+    })
+    .catch(() => {
+      onError();
+    });
 }
 
 export const todoController = {
