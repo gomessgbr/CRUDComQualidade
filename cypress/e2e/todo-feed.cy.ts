@@ -4,7 +4,7 @@ describe("/ - Todos feed", () => {
   it("when load, renders the page", () => {
     cy.visit(BASE_URL);
   });
-  it.only("when create a anew todo, it must appears in the screen", () => {
+  it("when create a anew todo, it must appears in the screen", () => {
     cy.intercept("POST", `${BASE_URL}/api/todos`, (request) => {
       request.reply({
         statusCode: 201,
@@ -19,11 +19,10 @@ describe("/ - Todos feed", () => {
       });
     }).as("createTodo");
     cy.visit(BASE_URL);
-    const $inputAddTodo = cy.get("input[name='add-todo']");
-    $inputAddTodo.type("Test todo");
-    const $btnAddTodo = cy.get("[aria-label='Adicionar novo item']");
-    $btnAddTodo.click();
-
+    const inputAddTodo = "input[name='add-todo']";
+    cy.get(inputAddTodo).type("Test todo");
+    const buttonAddTodo = "[aria-label='Adicionar novo item']";
+    cy.get(buttonAddTodo).click();
     cy.get("table > tbody").contains("Test todo");
   });
 });
