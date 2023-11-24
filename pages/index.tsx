@@ -122,11 +122,11 @@ function HomePage() {
                     <input
                       type="checkbox"
                       checked={todo.done}
-                      onChange={() => {
+                      onChange={function handleToggle() {
                         todoController.toggleDone({
                           id: todo.id,
                           onError() {
-                            alert("Falha ao atualizar a todo");
+                            alert("Falha ao atualizar a TODO :(");
                           },
                           updateTodoOnScreen() {
                             setTodos((currentTodos) => {
@@ -146,10 +146,32 @@ function HomePage() {
                     />
                   </td>
                   <td>{todo.id.substring(0, 4)}</td>
-                  <td>{todo.done && <s>{todo.content}</s>}</td>
-                  <td>{!todo.done && todo.content}</td>
+                  <td>
+                    {!todo.done && todo.content}
+                    {todo.done && <s>{todo.content}</s>}
+                  </td>
                   <td align="right">
-                    <button data-type="delete">Apagar</button>
+                    <button
+                      data-type="delete"
+                      onClick={function handleClick() {
+                        todoController
+                          .deleteById(todo.id)
+                          .then(() => {
+                            setTodos((currentTodos) => {
+                              return currentTodos.filter((currentTodo) => {
+                                if (currentTodo.id === todo.id) return false;
+
+                                return true;
+                              });
+                            });
+                          })
+                          .catch(() => {
+                            // console.error("Failed to delete");
+                          });
+                      }}
+                    >
+                      Apagar
+                    </button>
                   </td>
                 </tr>
               );

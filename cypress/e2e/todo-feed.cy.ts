@@ -18,11 +18,20 @@ describe("/ - Todos feed", () => {
         },
       });
     }).as("createTodo");
+
+    // 1 - Abrir a página
     cy.visit(BASE_URL);
+    // 2 e 3 - Selecionar o input de criar nova todo e Digitar no input de criar nova todo
     const inputAddTodo = "input[name='add-todo']";
-    cy.get(inputAddTodo).type("Test todo");
+    cy.get(inputAddTodo).type("Sei la vei");
+    // 4 - Clicar no botão
     const buttonAddTodo = "[aria-label='Adicionar novo item']";
     cy.get(buttonAddTodo).click();
-    cy.get("table > tbody").contains("Test todo");
+
+    // 5 - Checar se na página surgiu um novo elemento
+    cy.get("table > tbody").contains("Sei la vei");
+
+    // Criar validações a partir de valores
+    expect("texto").to.be.equal("texto");
   });
 });

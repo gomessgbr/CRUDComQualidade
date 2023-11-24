@@ -59,11 +59,13 @@ function toggleDone({
   updateTodoOnScreen,
   onError,
 }: TodoControllerToggleDoneParams) {
-  //Optmistic update
+  // Optmistic Update
+  // updateTodoOnScreen();
 
   todoRepository
     .toggleDone(id)
     .then(() => {
+      // Update Real
       updateTodoOnScreen();
     })
     .catch(() => {
@@ -71,9 +73,15 @@ function toggleDone({
     });
 }
 
+async function deleteById(id: string): Promise<void> {
+  const todoId = id;
+  await todoRepository.deleteById(todoId);
+}
+
 export const todoController = {
   get,
   filterTodosByContent,
   create,
   toggleDone,
+  deleteById,
 };
