@@ -25,35 +25,44 @@ async function get({
   page,
   limit,
 }: TodoRepositoryGetParams = {}): Promise<TodoRepositoryGetOutput> {
-  const { data, error, count } = await supabase.from("todos").select("*", {
-    count: "exact",
-  });
-
-  const todos = data as Todo[];
-  const total = count || todos.length;
-  return {
-    todos,
-    total,
-    pages: 1,
-  };
+  const currentPage = page || 1;
+  const currentLimit = limit || 10;
+  const startIndex = (currentPage - 1) * currentLimit;
+  const endIndex = currentPage * (currentLimit - 1);
+  const { data, error, count } = await supabase
+    .from("todos")
+    .select("*", {
+      count: "exact",
+    })
+    .range(startIndex, endIndex);
 
   if (error) {
     throw new Error("Failed to fetch data");
   }
-  const currentPage = page || 1;
-  const currentLimit = limit || 10;
-  const ALL_TODOS = read().reverse();
 
-  const startIndex = (currentPage - 1) * currentLimit;
-  const endIndex = currentPage * currentLimit;
-  const paginatedTodos = ALL_TODOS.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(ALL_TODOS.length / currentLimit);
-
+  const todos = data as Todo[];
+  const total = count || todos.length;
+  const totalPages = Math.ceil(total / currentLimit);
   return {
-    total: ALL_TODOS.length,
-    todos: paginatedTodos,
+    todos,
+    total,
     pages: totalPages,
   };
+
+  // const currentPage = page || 1;
+  // const currentLimit = limit || 10;
+  // const ALL_TODOS = read().reverse();
+
+  // const startIndex = (currentPage - 1) * currentLimit;
+  // const endIndex = currentPage * currentLimit;
+  // const paginatedTodos = ALL_TODOS.slice(startIndex, endIndex);
+  // const totalPages = Math.ceil(ALL_TODOS.length / currentLimit);
+
+  // return {
+  //   total: ALL_TODOS.length,
+  //   todos: paginatedTodos,
+  //   pages: totalPages,
+  // };
 }
 async function createByContent(content: string): Promise<Todo> {
   const newTodo = create(content);
