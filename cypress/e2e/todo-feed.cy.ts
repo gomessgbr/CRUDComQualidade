@@ -4,7 +4,7 @@ describe("/ - Todos feed", () => {
   it("when load, renders the page", () => {
     cy.visit(BASE_URL);
   });
-  it("when create a anew todo, it must appears in the screen", () => {
+  it("when create a new todo, it must appears in the screen", () => {
     cy.intercept("POST", `${BASE_URL}/api/todos`, (request) => {
       request.reply({
         statusCode: 201,
