@@ -5,8 +5,8 @@ on:
   pull_request:
     types: [opened, synchronize]
 
-jobs: 
-  lint: 
+jobs:
+  lint:
     runs-on: ubuntu-latest
     steps:
       ## [Common_CI_Steps]
