@@ -26,5 +26,5 @@ jobs:
           ls -la
       - name: "Install Dependencies"
         run: "npm install"
-      - name: "Lint"
+      - name: "Deploy"
         run: "npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}"
